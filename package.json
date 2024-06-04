@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^3.0.0",
+    "cors": "^2.8.5",
+    "electron-updater": "^6.3.0-alpha.4",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.7.5"
+  },
+  "icon": "./icons.ico",
+  "name": "ship",
+  "repository": {
+    "url": "https://github.com/babyo777/ship"
+  },
+  "version": "1.0.5",
+  "description": "ship your files without internet",
+  "main": "./main/index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "@tanmay11117",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^30.0.9"
+  }
+}
