@@ -1,6 +1,6 @@
 # Wi-Fi File Transfer App
 
-Wi-Fi File Transfer App is an Electron-based application designed for Windows, enabling seamless file transfers from your phone to your PC over the same Wi-Fi network. This app provides a convenient and secure way to transfer files without relying on internet access or using cables. [Download](https://github.com/babyo777/transfer/releases/download/1.0.1/Transfer-setup.exe), [Demo](https://x.com/Tanmay11117/status/1797588308773818588)
+Wi-Fi File Transfer App is an Electron-based application designed for Windows, enabling seamless file transfers from your phone to your PC over the same Wi-Fi network. This app provides a convenient and secure way to transfer files without relying on internet access or using cables. [Download](https://github.com/babyo777/transfer/releases/download/1.0.5/ship-setup.exe), [Demo](https://x.com/Tanmay11117/status/1797588308773818588)
 
 ## Features
 
