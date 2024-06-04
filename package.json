@@ -11,9 +11,9 @@
   "icon": "./icons.ico",
   "name": "ship",
   "repository": {
-    "url": "https://github.com/babyo777/ship"
+    "url": "https://github.com/babyo77/ship"
   },
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "ship your files without internet",
   "main": "./main/index.js",
   "scripts": {

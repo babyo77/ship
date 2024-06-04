@@ -55,14 +55,21 @@ electron.app.whenReady().then(() => {
         }
         return cb(null, "./uploads");
       } catch (error) {
-        io.emit("error", "Run app as administrator");
+        io.emit(
+          "error",
+          "Error: operation not permitted, Run app as administrator"
+        );
       }
     },
     filename: function (_req, file, cb) {
       try {
+        fs.writeFileSync("check.bin", "");
         return cb(null, file.originalname);
       } catch (error) {
-        io.emit("error", "Run app as administrator");
+        io.emit(
+          "error",
+          "Error: operation not permitted, Run app as administrator"
+        );
       }
     },
   });
@@ -105,8 +112,9 @@ electron.app.whenReady().then(() => {
   expressApp.post("/upload", upload.array("file"), (req, res) => {
     try {
       io.emit("file", req.files);
-      res.status(200).json("ok");
+      res.status(200).json("uploaded");
     } catch (error) {
+      res.status(500).json(error);
       io.emit("error", `An error occurred: ${error.message}`);
     }
   });
