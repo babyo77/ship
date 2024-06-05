@@ -27,7 +27,7 @@ Ship is an Electron-based application designed for Windows, enabling seamless fi
 ## Usage
 
 1. **Start the App**:
-   - Open `Wi-Fi File Transfer App` on your PC.
+   - Open `Ship` on your PC.
 
 2. **Scan the QR Code**:
    - Use your phone's camera to scan the QR code displayed in the app on your PC.
