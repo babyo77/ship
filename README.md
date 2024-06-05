@@ -21,7 +21,7 @@ Ship is an Electron-based application designed for Windows, enabling seamless fi
 
 ## Installation
 
-1. Download the `transfer-setup.exe` installer from the [releases page](https://github.com/babyo77/ship/releases).
+1. Download the `ship-setup.exe` installer from the [releases page](https://github.com/babyo77/ship/releases).
 2. Run the installer and follow the on-screen instructions to complete the installation.
 
 ## Usage
