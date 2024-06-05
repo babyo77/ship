@@ -1,34 +1,57 @@
-# ios-share
+# Ship
 
-An Electron application with React and TypeScript
+Ship is an Electron-based application designed for Windows, enabling seamless file transfers from your phone to your PC over the same Wi-Fi network. This app provides a convenient and secure way to transfer files without relying on internet access or using cables. [Download](https://github.com/babyo77/ship/releases/download/1.0.5/ship-setup.exe), [Demo](https://x.com/Tanmay11117/status/1797588308773818588)
 
-## Recommended IDE Setup
+## Features
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- **Wi-Fi Transfer**: Transfer files between your phone and PC over the same Wi-Fi network.
+- **Secure and Private**: Your files are transferred directly between your devices, ensuring privacy.
+- **User-Friendly Interface**: Easy to use with a clean and intuitive interface.
 
-## Project Setup
+## Requirements
 
-### Install
+### For Phone
 
-```bash
-$ npm install
-```
+- Any modern smartphone with a web browser.
 
-### Development
+### For PC
 
-```bash
-$ npm run dev
-```
+- Windows 7 or higher.
+- [Node.js](https://nodejs.org/en)
 
-### Build
+## Installation
 
-```bash
-# For windows
-$ npm run build:win
+1. Download the `transfer-setup.exe` installer from the [releases page](https://github.com/babyo77/ship/releases).
+2. Run the installer and follow the on-screen instructions to complete the installation.
 
-# For macOS
-$ npm run build:mac
+## Usage
 
-# For Linux
-$ npm run build:linux
-```
+1. **Start the App**:
+   - Open `Wi-Fi File Transfer App` on your PC.
+
+2. **Scan the QR Code**:
+   - Use your phone's camera to scan the QR code displayed in the app on your PC.
+
+3. **Open the Web Interface**:
+   - On your phone, open the web browser and enter the URL provided after scanning the QR code.
+
+4. **Transfer Files**:
+   - Use the web interface to select files from your phone and initiate the transfer.
+   - The files will be transferred directly to your PC over the Wi-Fi network.
+
+## Troubleshooting
+
+- **Wi-Fi Connection**: Ensure both your phone and PC are connected to the same Wi-Fi network.
+- **Firewall**: If you encounter connection issues, check your firewall settings to allow the app access.
+- **C Drive**: If app is installed in C drive try to run as administrator.
+
+## Development
+
+### Prerequisites
+
+- Node.js
+- npm
+
+### Contact
+
+For any inquiries or support, [contact](https://twitter.com/tanmay11117)
