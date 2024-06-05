@@ -1,11 +1,12 @@
 {
   "name": "ship",
-  "productName": "ship",
+  "productName": "Ship",
   "version": "1.0.7",
   "description": "Ship your files without internet",
   "main": "./out/main/index.js",
   "author": "babyo7_",
   "homepage": "https://ship-file.vercel.app",
+  "publisher": "tanmay11117",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
@@ -30,8 +31,30 @@
         "nsis"
       ],
       "icon": "icons.ico",
-      "requestedExecutionLevel": "requireAdministrator"
+      "requestedExecutionLevel": "requireAdministrator",
+      "signingHashAlgorithms": [
+        "sha256"
+      ],
+      "publisherName": "tanmay11117",
+      "signAndEditExecutable": true,
+      "verifyUpdateCodeSignature": true
     },
+    "extraResources": [
+      {
+        "from": "public/",
+        "to": "./public",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "icons.ico",
+        "to": "./icons.ico",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "nsis": {
       "installerIcon": "icons.ico",
       "uninstallerIcon": "icons.ico",
@@ -76,6 +99,7 @@
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
+    "electron": "^30.0.9",
     "electron-builder": "^24.9.1",
     "electron-vite": "^2.0.0",
     "eslint": "^8.56.0",

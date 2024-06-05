@@ -59,7 +59,7 @@ app.whenReady().then(() => {
   })
 
   expressApp.use(cors())
-  expressApp.use(express.static('public'))
+  expressApp.use(express.static('./resources/public'))
   const storage = multer.diskStorage({
     destination: function (_req, _file, cb) {
       try {
@@ -132,11 +132,18 @@ app.whenReady().then(() => {
   expressApp.get('/download', (req, res) => {
     try {
       const file = req.query.file as string
-      res.setHeader('Content-Disposition', `attachment; filename="${path.basename(file)}"`)
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${path.basename(path.resolve(file))}"`
+      )
       res.setHeader('Content-Type', 'application/octet-stream')
 
       fs.createReadStream(path.resolve(file)).pipe(res)
     } catch (error) {
+      //@ts-expect-error:error message
+      io.emit('error', error.message)
+      console.log(error)
+
       res.status(500).json(error)
     }
   })
