@@ -1,7 +1,7 @@
 {
   "name": "ship",
   "productName": "Ship",
-  "version": "1.0.71",
+  "version": "1.0.72",
   "description": "Ship your files without internet",
   "main": "./out/main/index.js",
   "author": "babyo7_",

@@ -22,7 +22,7 @@ function QrCode({ deviceInfo }: { deviceInfo: deviceInfo }): React.JSX.Element {
       <div className="text-center">
         <p>Scan this QR from your device</p>
 
-        <p className="text-zinc-400 select-none text-xs cursor-pointer hover:text-zinc-300 duration-300 transition-all">
+        <p className="text-red-200 select-none text-xs cursor-pointer hover:text-red-400 duration-300 transition-all">
           Not working? <span onClick={updateIndex}>Change QR</span>
         </p>
       </div>

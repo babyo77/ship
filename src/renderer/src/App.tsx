@@ -86,7 +86,7 @@ function App(): React.JSX.Element {
         <div className="flex  h-[87dvh] px-2 justify-center items-center flex-col gap-3">
           <p className="text-center">
             Please ensure that you are connected to the same <br />
-            Wi-Fi network before proceeding.
+            Wi-Fi or Hotspot before proceeding.
           </p>
           {deviceInfo && <QrCode deviceInfo={deviceInfo} />}
         </div>
