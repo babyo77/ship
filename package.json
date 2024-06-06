@@ -25,6 +25,13 @@
   },
   "license": "ISC",
   "build": {
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "babyo77",
+        "repo": "https://github.com/babyo77/ship"
+      }
+    ],
     "appId": "app.ship.babyo7",
     "win": {
       "target": [
@@ -63,10 +70,9 @@
       "allowToChangeInstallationDirectory": true
     }
   },
-  "repository": "https://github.com/babyo77/ship",
-  "publish": {
-    "provider": "github",
-    "releaseType": "release"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/babyo77/ship.git"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",
