@@ -1,7 +1,7 @@
 {
   "name": "ship",
   "productName": "Ship",
-  "version": "1.0.81",
+  "version": "1.0.82",
   "description": "Ship your files without internet",
   "main": "./out/main/index.js",
   "author": "babyo7_",
@@ -28,6 +28,7 @@
     "publish": [
       {
         "provider": "github",
+        "releaseType": "release",
         "owner": "babyo77",
         "repo": "https://github.com/babyo77/ship"
       }

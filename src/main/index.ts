@@ -51,6 +51,7 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
   autoUpdater.checkForUpdates()
+  autoUpdater.checkForUpdatesAndNotify()
   const expressApp = express()
   const server = createServer(expressApp)
   const io = new Server(server, {
