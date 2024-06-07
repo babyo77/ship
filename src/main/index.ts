@@ -116,12 +116,15 @@ app.whenReady().then(() => {
     socket.on('disconnect', () => {
       io.to('transfer').emit('joined', io.sockets.adapter.rooms.get('transfer')?.size)
     })
+    socket.on('phone', (file) => {
+      socket.broadcast.to('transfer').emit('PCFiles', file)
+    })
   })
 
   expressApp.post('/upload', upload.array('file'), (req, res) => {
     try {
       io.emit('file', req.files)
-      res.status(200).json('uploaded')
+      res.status(200).json(req.files)
     } catch (error) {
       res.status(500).json(error)
       //@ts-expect-error:error message
