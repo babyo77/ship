@@ -1,6 +1,6 @@
 # Ship
 
-Ship is an Electron-based application designed for Windows, enabling seamless file transfers from your phone to your PC over the same Wi-Fi network. This app provides a convenient and secure way to transfer files without relying on internet access or using cables. [Download](https://github.com/babyo77/ship/releases/download/1.0.7/ship-setup.exe), [Demo](https://x.com/Tanmay11117/status/1797588308773818588)
+Ship is an Electron-based application designed for Windows, enabling seamless file transfers from your phone to your PC over the same Wi-Fi network. This app provides a convenient and secure way to transfer files without relying on internet access or using cables. [Download](https://github.com/babyo77/ship/releases/download/1.0.8/ship-setup.exe), [Demo](https://x.com/Tanmay11117/status/1797588308773818588)
 
 ## Features
 
