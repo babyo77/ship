@@ -70,10 +70,7 @@
       "allowToChangeInstallationDirectory": true
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babyo77/ship.git"
-  },
+  "repository": "https://github.com/babyo77/ship",
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",

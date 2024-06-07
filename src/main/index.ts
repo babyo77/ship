@@ -11,6 +11,7 @@ import { Server } from 'socket.io'
 const icon = path.join(__dirname, './icons.ico')
 import { autoUpdater } from 'electron-updater'
 
+autoUpdater.autoDownload = true
 autoUpdater.autoInstallOnAppQuit = true
 function createWindow(): void {
   // Create the browser window.
