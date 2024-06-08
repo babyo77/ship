@@ -72,10 +72,14 @@ function App(): React.JSX.Element {
   useEffect(() => {
     axios.get(endpoint + 'info').then((res) => {
       setDeviceInfo(res.data)
-      if (!localStorage.getItem('id')) {
-        axios.get(`https://ship-backend.vercel.app/user?p=${res.data.platform}`).then(() => {
-          localStorage.setItem('id', '1')
-        })
+      try {
+        if (!localStorage.getItem('id')) {
+          axios.get(`https://ship-backend.vercel.app/user?p=${res.data.platform}`).then(() => {
+            localStorage.setItem('id', '1')
+          })
+        }
+      } catch (error) {
+        console.log(error)
       }
     })
 
