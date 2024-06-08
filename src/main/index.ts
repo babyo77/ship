@@ -139,13 +139,19 @@ app.whenReady().then(() => {
   expressApp.get('/download', (req, res) => {
     try {
       const file = req.query.file as string
-      res.setHeader(
-        'Content-Disposition',
-        `attachment; filename="${path.basename(path.resolve(file))}"`
-      )
-      res.setHeader('Content-Type', 'application/octet-stream')
+      if (fs.existsSync(path.resolve(file))) {
+        res.setHeader(
+          'Content-Disposition',
+          `attachment; filename="${path.basename(path.resolve(file))}"`
+        )
+        res.setHeader('Content-Type', 'application/octet-stream')
 
-      fs.createReadStream(path.resolve(file)).pipe(res)
+        fs.createReadStream(path.resolve(file)).pipe(res)
+      } else {
+        res
+          .status(404)
+          .send("Can't open file: it is either deleted or moved to a different location.")
+      }
     } catch (error) {
       //@ts-expect-error:error message
       io.emit('error', error.message)
