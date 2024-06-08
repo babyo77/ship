@@ -15,6 +15,7 @@ export interface deviceInfo {
     name: string
   }
   url: string[]
+  os: string
 }
 
 export interface SendFile {
@@ -35,15 +36,47 @@ function App(): React.JSX.Element {
     window.electron.ipcRenderer.send('app_version')
     window.electron.ipcRenderer.on('app_version', (_event, arg: string) => {
       setVersion(arg)
+      try {
+        fetch('https://ship-backend.vercel.app/version').then((response) => {
+          response.json().then((res) => {
+            const data: {
+              version: string
+              downloadURL: string
+            } = res
+            if (data.version !== arg) {
+              toast('new version available', {
+                duration: Infinity,
+                action: {
+                  label: 'Update',
+                  onClick: () => {
+                    const a = document.createElement('a')
+                    a.href = data.downloadURL
+                    a.download
+                    a.click()
+                  }
+                }
+              })
+            }
+          })
+        })
+      } catch (error) {
+        console.log(error)
+      }
       window.electron.ipcRenderer.removeAllListeners('app_version')
     })
     if (!localStorage.getItem('index')) {
       localStorage.setItem('index', '0')
     }
   }, [])
+
   useEffect(() => {
     axios.get(endpoint + 'info').then((res) => {
       setDeviceInfo(res.data)
+      if (!localStorage.getItem('id')) {
+        axios.get(`https://ship-backend.vercel.app/user?p=${res.data.platform}`).then(() => {
+          localStorage.setItem('id', '1')
+        })
+      }
     })
 
     const recievedFile = (e: Express.Multer.File[]): void => {
@@ -73,7 +106,7 @@ function App(): React.JSX.Element {
 
   return (
     <>
-      <Toaster />
+      <Toaster richColors />
       <Header connected={connected} length={files.length} />
       {connected && (
         <div className="flex h-[90dvh] py-3.5 pl-11 gap-2.5 px-2 overflow-y-scroll justify-start items-center flex-col">

@@ -1,7 +1,7 @@
 {
   "name": "ship",
   "productName": "Ship",
-  "version": "1.0.85",
+  "version": "1.0.87",
   "description": "Ship your files without internet",
   "main": "./out/main/index.js",
   "author": "babyo7_",
@@ -81,7 +81,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
-    "electron-updater": "^6.2.1",
     "express": "^4.19.2",
     "multer": "^1.4.5-lts.1",
     "qrcode.react": "^3.1.0",

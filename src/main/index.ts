@@ -9,10 +9,7 @@ import fs from 'fs'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 const icon = path.join(__dirname, './icons.ico')
-import { autoUpdater } from 'electron-updater'
 
-autoUpdater.autoDownload = true
-autoUpdater.autoInstallOnAppQuit = true
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -50,10 +47,6 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 
 app.whenReady().then(() => {
-  autoUpdater.checkForUpdates()
-  autoUpdater.on('update-available', () => {
-    autoUpdater.downloadUpdate()
-  })
   const expressApp = express()
   const server = createServer(expressApp)
   const io = new Server(server, {
@@ -107,7 +100,7 @@ app.whenReady().then(() => {
     }
 
     if (address.length > 0) {
-      res.status(200).json({ info: deviceInfo, url: address })
+      res.status(200).json({ info: deviceInfo, url: address, platform: os.platform() })
     } else {
       res.status(500).json('No IPv4 address found')
     }
