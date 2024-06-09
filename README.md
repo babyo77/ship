@@ -17,7 +17,6 @@ Ship is an Electron-based application designed for Windows, enabling seamless fi
 ### For PC
 
 - Windows 7 or higher.
-- [Node.js](https://nodejs.org/en)
 
 ## Installation
 
@@ -44,13 +43,6 @@ Ship is an Electron-based application designed for Windows, enabling seamless fi
 - **Wi-Fi Connection**: Ensure both your phone and PC are connected to the same Wi-Fi network.
 - **Firewall**: If you encounter connection issues, check your firewall settings to allow the app access.
 - **C Drive**: If app is installed in C drive try to run as administrator.
-
-## Development
-
-### Prerequisites
-
-- Node.js
-- npm
 
 ### Contact
 
