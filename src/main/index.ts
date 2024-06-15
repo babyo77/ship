@@ -1,14 +1,26 @@
-import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog, clipboard, Tray, Menu } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import express from 'express'
+import express, { NextFunction, Response, Request } from 'express'
 import multer from 'multer'
 import cors from 'cors'
 import os from 'os'
 import fs from 'fs'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import clipboardListener from 'clipboard-event'
 const icon = path.join(__dirname, './icons.ico')
+let tray: Tray | null = null
+let Hidden: boolean = false
+
+// for privacy
+const checkHiddenMiddleware = (_req: Request, res: Response, next: NextFunction): void => {
+  if (Hidden) {
+    res.status(403).send()
+    return
+  }
+  next()
+}
 
 function createWindow(): void {
   // Create the browser window.
@@ -33,6 +45,48 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
+  // Tray setup
+  tray = new Tray('./icons.ico')
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Quit Ship',
+      click: (): void => {
+        try {
+          fs.unlinkSync('./clipboard.json')
+        } catch (error) {
+          console.log(error)
+        }
+        app.quit()
+      }
+    }
+  ])
+
+  tray.setToolTip('Ship')
+  tray.setContextMenu(contextMenu)
+  tray.on('click', () => {
+    if (mainWindow.isVisible()) {
+      mainWindow.hide()
+    } else {
+      mainWindow.show()
+    }
+  })
+
+  // Window listeners
+  mainWindow.on('close', (event) => {
+    if (mainWindow.isVisible()) {
+      event.preventDefault()
+      mainWindow.hide()
+    }
+  })
+
+  mainWindow.on('hide', () => {
+    Hidden = true
+  })
+
+  mainWindow.on('show', () => {
+    Hidden = false
+  })
+
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
@@ -47,6 +101,11 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 
 app.whenReady().then(() => {
+  // remove old clipboard text
+  if (fs.existsSync('./clipboard.json')) {
+    fs.unlinkSync('./clipboard.json')
+  }
+  // express server
   const expressApp = express()
   const server = createServer(expressApp)
   const io = new Server(server, {
@@ -81,6 +140,17 @@ app.whenReady().then(() => {
   const upload = multer({ storage })
   const port = 7490
 
+  expressApp.post('/upload', checkHiddenMiddleware, upload.array('file'), (req, res) => {
+    try {
+      io.emit('file', req.files)
+      res.status(200).json(req.files)
+    } catch (error) {
+      res.status(500).json(error)
+      //@ts-expect-error:error message
+      io.emit('error', `An error occurred: ${error.message}`)
+    }
+  })
+
   expressApp.get('/info', (_req, res) => {
     const networkInterfaces = os.networkInterfaces()
     const address: string[] = []
@@ -100,12 +170,13 @@ app.whenReady().then(() => {
     }
 
     if (address.length > 0) {
-      res.status(200).json({ info: deviceInfo, url: address, platform: os.platform() })
+      res.status(200).json({ info: deviceInfo, url: address, platform: os.hostname() })
     } else {
       res.status(500).json('No IPv4 address found')
     }
   })
 
+  // socket listeners
   io.on('connection', (socket) => {
     socket.join('transfer')
 
@@ -129,6 +200,15 @@ app.whenReady().then(() => {
     }
   })
 
+  expressApp.get('/clipboard', (_req, res) => {
+    if (fs.existsSync('./clipboard.json')) {
+      res.setHeader('Content-Type', 'application/json')
+      const stream = fs.createReadStream('./clipboard.json')
+      stream.pipe(res)
+    } else {
+      res.status(404).send()
+    }
+  })
   expressApp.get('/download', (req, res) => {
     try {
       const file = req.query.file as string
@@ -159,7 +239,7 @@ app.whenReady().then(() => {
   })
 
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  electronApp.setAppUserModelId('ship.com')
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -168,7 +248,19 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
+  // clipboard sync
+  clipboardListener.startListening()
+  clipboardListener.on('change', () => {
+    const text = clipboard.readText('clipboard')
+    if (!fs.existsSync('./clipboard.json')) {
+      fs.writeFileSync('./clipboard.json', JSON.stringify([], null, 2), 'utf8')
+    }
+    const preload = JSON.parse(fs.readFileSync('./clipboard.json', 'utf-8'))
+    const jsonData = [{ text: text }, ...preload]
+    fs.writeFileSync('./clipboard.json', JSON.stringify(jsonData, null, 2), 'utf8')
+  })
+
+  // IPC Listeners
   ipcMain.on('app_version', (event) => {
     event.sender.send('app_version', app.getVersion())
   })
@@ -191,7 +283,6 @@ app.whenReady().then(() => {
       io.emit('error', `An error occurred: ${error.message}`)
     }
   })
-
   ipcMain.handle('dialog:openFile', async (): Promise<unknown[] | undefined> => {
     try {
       const { canceled, filePaths } = await dialog.showOpenDialog({

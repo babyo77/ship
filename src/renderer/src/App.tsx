@@ -9,6 +9,8 @@ import socket from './Socket/socket'
 import { Toaster, toast } from 'sonner'
 import { IoFolderOpenOutline } from 'react-icons/io5'
 import Sendfile from './components/sendfile'
+// import Changelog from './components/Changelog'
+import QRpopup from './components/qrPopup'
 export interface deviceInfo {
   info: {
     platform: string
@@ -136,7 +138,11 @@ function App(): React.JSX.Element {
             className="h-8 w-8 p-1 pt-1.5 hover:text-zinc-400 duration-300 transition-all cursor-pointer"
           />
         </div>
+
         {connected && <Sendfile setSentFile={setSentFile} sentFile={sentFile} />}
+
+        {/* {version && <Changelog version={version} />} */}
+        {deviceInfo && connected && <QRpopup deviceInfo={deviceInfo} />}
         <Info />
       </div>
       {files.length == 0 && (
