@@ -24,6 +24,7 @@ const checkHiddenMiddleware = (_req: Request, res: Response, next: NextFunction)
 
 function createWindow(): void {
   // Create the browser window.
+
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -36,9 +37,22 @@ function createWindow(): void {
       sandbox: false
     }
   })
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
+  const lock = app.requestSingleInstanceLock()
+  if (!lock) {
+    app.quit()
+  } else {
+    app.on('second-instance', () => {
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore()
+        mainWindow.show()
+        mainWindow.focus()
+      }
+    })
+  }
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -46,7 +60,7 @@ function createWindow(): void {
   })
 
   // Tray setup
-  tray = new Tray('./icons.ico')
+  tray = new Tray('resources/icons.ico')
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Quit Ship',
@@ -56,6 +70,7 @@ function createWindow(): void {
         } catch (error) {
           console.log(error)
         }
+        clipboardListener.stopListening()
         app.quit()
       }
     }
@@ -234,6 +249,9 @@ app.whenReady().then(() => {
     }
   })
 
+  server.on('error', (e) => {
+    console.log(e)
+  })
   server.listen(port, () => {
     console.log(`listening on http://localhost:${port}`)
   })
@@ -318,6 +336,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    clipboardListener.stopListening()
     app.quit()
   }
 })
