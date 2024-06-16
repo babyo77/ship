@@ -19,7 +19,7 @@ import fs from 'fs'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import clipboardListener from 'clipboard-event'
-const globalIcon = 'resources/icons.ico'
+const globalIcon = './resources/icons.ico'
 const icon = path.join(__dirname, './icons.ico')
 const securityFile = './security.json'
 let tray: Tray | null = null
@@ -335,7 +335,7 @@ app.whenReady().then(() => {
   })
 
   // Set app user model id for windows
-  electronApp.setAppUserModelId('ship.com')
+  electronApp.setAppUserModelId('Ship')
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -348,6 +348,7 @@ app.whenReady().then(() => {
   clipboardListener.startListening()
   clipboardListener.on('change', () => {
     const text = clipboard.readText('clipboard')
+    if (text.trim().length === 0) return
     if (!fs.existsSync('./clipboard.json')) {
       fs.writeFileSync('./clipboard.json', JSON.stringify([], null, 2), 'utf8')
     }
