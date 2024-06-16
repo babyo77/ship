@@ -1,4 +1,14 @@
-import { app, shell, BrowserWindow, ipcMain, dialog, clipboard, Tray, Menu } from 'electron'
+import {
+  app,
+  shell,
+  BrowserWindow,
+  ipcMain,
+  dialog,
+  clipboard,
+  Tray,
+  Menu,
+  Notification
+} from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import express, { NextFunction, Response, Request } from 'express'
@@ -9,22 +19,59 @@ import fs from 'fs'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import clipboardListener from 'clipboard-event'
+const globalIcon = 'resources/icons.ico'
 const icon = path.join(__dirname, './icons.ico')
+const securityFile = './security.json'
 let tray: Tray | null = null
 let Hidden: boolean = false
+let SecurityStatus: boolean = false
+
+function checkSecurity(): void {
+  if (!fs.existsSync(securityFile)) {
+    fs.writeFileSync(securityFile, JSON.stringify(false), 'utf-8')
+    ipcMain.emit('security', false)
+  } else {
+    updatedSecurityStatus()
+  }
+}
+
+function updatedSecurityStatus(): boolean {
+  const security = fs.readFileSync(securityFile, 'utf-8')
+  const status: boolean = JSON.parse(security)
+  SecurityStatus = status
+  return status
+}
 
 // for privacy
-const checkHiddenMiddleware = (_req: Request, res: Response, next: NextFunction): void => {
-  if (Hidden) {
+function randomNumber(): number {
+  const number = Math.floor(Math.random() * (9000 - 1000 + 1)) + 1000
+  ipcMain.emit('code', number)
+  return number
+}
+
+const SecurityCode = randomNumber()
+
+const SecureConnection = (req: Request, res: Response, next: NextFunction): void => {
+  if (updatedSecurityStatus()) {
+    const code = req.headers.referer
+    if (req.headers.host === 'localhost:7490') {
+      return next()
+    }
+    if (req.query.code === String(SecurityCode)) {
+      return next()
+    }
+    if (code && code.includes(String(SecurityCode))) {
+      return next()
+    }
     res.status(403).send()
     return
   }
-  next()
+  return next()
 }
 
+checkSecurity()
 function createWindow(): void {
   // Create the browser window.
-
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -60,13 +107,15 @@ function createWindow(): void {
   })
 
   // Tray setup
-  tray = new Tray('resources/icons.ico')
+  tray = new Tray(globalIcon)
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Quit Ship',
       click: (): void => {
         try {
-          fs.unlinkSync('./clipboard.json')
+          if (fs.existsSync('./clipboard.json')) {
+            fs.unlinkSync('./clipboard.json')
+          }
         } catch (error) {
           console.log(error)
         }
@@ -122,15 +171,18 @@ app.whenReady().then(() => {
   }
   // express server
   const expressApp = express()
+  expressApp.use(cors())
+  expressApp.use(SecureConnection)
+  expressApp.use(express.static('./resources/public'))
+
   const server = createServer(expressApp)
   const io = new Server(server, {
     cors: {
       origin: true
     }
   })
+  const port = 7490
 
-  expressApp.use(cors())
-  expressApp.use(express.static('./resources/public'))
   const storage = multer.diskStorage({
     destination: function (_req, _file, cb) {
       try {
@@ -153,11 +205,27 @@ app.whenReady().then(() => {
   })
 
   const upload = multer({ storage })
-  const port = 7490
-
-  expressApp.post('/upload', checkHiddenMiddleware, upload.array('file'), (req, res) => {
+  expressApp.post('/upload', upload.array('file'), (req, res) => {
     try {
-      io.emit('file', req.files)
+      const files = req.files ?? []
+
+      if (req.files && Array.isArray(files)) {
+        if (Hidden) {
+          const notification = new Notification({
+            icon: globalIcon,
+            title: 'Recieved a new File',
+            body: 'Tap to view',
+            actions: [{ text: 'Show', type: 'button' }]
+          })
+          notification.show()
+          notification.on('click', () => {
+            const firstFile = files[0].path
+            shell.showItemInFolder(path.resolve(firstFile))
+          })
+        }
+      }
+
+      io.emit('file', req.files || [])
       res.status(200).json(req.files)
     } catch (error) {
       res.status(500).json(error)
@@ -185,34 +253,43 @@ app.whenReady().then(() => {
     }
 
     if (address.length > 0) {
-      res.status(200).json({ info: deviceInfo, url: address, platform: os.hostname() })
+      res
+        .status(200)
+        .json({ info: deviceInfo, url: address, platform: os.hostname(), code: SecurityCode })
     } else {
       res.status(500).json('No IPv4 address found')
     }
   })
 
   // socket listeners
+  io.use((socket, next) => {
+    if (updatedSecurityStatus()) {
+      if (
+        socket.handshake.headers.host === 'localhost:7490' ||
+        socket.handshake.headers.referer?.includes(String(SecurityCode))
+      ) {
+        return next()
+      } else {
+        socket.disconnect(true)
+      }
+    } else {
+      return next()
+    }
+  })
   io.on('connection', (socket) => {
     socket.join('transfer')
-
+    io.emit('security', updatedSecurityStatus())
     io.to('transfer').emit('joined', io.sockets.adapter.rooms.get('transfer')?.size)
     socket.on('disconnect', () => {
       io.to('transfer').emit('joined', io.sockets.adapter.rooms.get('transfer')?.size)
     })
+    socket.on('text', (text) => {
+      console.log(text)
+      socket.broadcast.to('transfer').emit('text', text)
+    })
     socket.on('phone', (file) => {
       socket.broadcast.to('transfer').emit('PCFiles', file)
     })
-  })
-
-  expressApp.post('/upload', upload.array('file'), (req, res) => {
-    try {
-      io.emit('file', req.files)
-      res.status(200).json(req.files)
-    } catch (error) {
-      res.status(500).json(error)
-      //@ts-expect-error:error message
-      io.emit('error', `An error occurred: ${error.message}`)
-    }
   })
 
   expressApp.get('/clipboard', (_req, res) => {
@@ -250,6 +327,7 @@ app.whenReady().then(() => {
   })
 
   server.on('error', (e) => {
+    io.emit('error', e.message)
     console.log(e)
   })
   server.listen(port, () => {
@@ -281,6 +359,12 @@ app.whenReady().then(() => {
   // IPC Listeners
   ipcMain.on('app_version', (event) => {
     event.sender.send('app_version', app.getVersion())
+  })
+  ipcMain.on('updateSecurity', () => {
+    if (fs.existsSync(securityFile)) {
+      fs.writeFileSync(securityFile, JSON.stringify(!SecurityStatus), 'utf-8')
+      io.emit('security', updatedSecurityStatus())
+    }
   })
   ipcMain.on('reveal-in-explorer', (_event, file) => {
     try {

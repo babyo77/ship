@@ -15,7 +15,7 @@ function QrCode({ deviceInfo }: { deviceInfo: deviceInfo }): React.JSX.Element {
     <>
       <QRCodeSVG
         className=" rounded-sm"
-        value={`http://${deviceInfo.url[index]}`}
+        value={`http://${deviceInfo.url[index]}?code=${deviceInfo.code}`}
         size={200}
         includeMargin
       />

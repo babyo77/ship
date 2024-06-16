@@ -21,9 +21,7 @@ function QRpopup({ deviceInfo }: { deviceInfo: deviceInfo }): React.JSX.Element 
       <DialogContent className="bg-neutral-900 w-[27rem]">
         <DialogHeader>
           <DialogTitle>QR Code</DialogTitle>
-          <DialogDescription>
-            <p className=" leading-tight">Scan to connect</p>
-          </DialogDescription>
+          <DialogDescription className="leading-tight">Scan to connect</DialogDescription>
         </DialogHeader>
         <div className=" space-y-3 py-4 flex justify-center flex-col items-center leading-tight font-normal text-zinc-400">
           <QrCode deviceInfo={deviceInfo} />

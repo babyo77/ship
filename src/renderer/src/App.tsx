@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { endpoint } from './api/api'
 import Header from './components/header'
 import Files from './components/file'
@@ -10,7 +10,9 @@ import { Toaster, toast } from 'sonner'
 import { IoFolderOpenOutline } from 'react-icons/io5'
 import Sendfile from './components/sendfile'
 // import Changelog from './components/Changelog'
+import { LuShieldCheck, LuShieldClose } from 'react-icons/lu'
 import QRpopup from './components/qrPopup'
+import Clipboard from './components/clipboard'
 export interface deviceInfo {
   info: {
     platform: string
@@ -18,6 +20,7 @@ export interface deviceInfo {
   }
   url: string[]
   os: string
+  code: string
 }
 
 export interface SendFile {
@@ -109,13 +112,34 @@ function App(): React.JSX.Element {
   }, [])
 
   const [sentFile, setSentFile] = useState<SendFile[]>([])
+  const [secure, setSecure] = useState<boolean>(false)
+  useEffect(() => {
+    const handleSecurity = (status: boolean): void => {
+      setSecure(status)
+      if (status) {
+        toast.success('Secure connection.')
+      } else {
+        toast.warning(
+          'Warning: Insecure connection detected. Consider enabling if you are on public WiFi.'
+        )
+      }
+    }
+    socket.on('security', handleSecurity)
 
+    return () => {
+      socket.off('security', handleSecurity)
+    }
+  }, [])
+  const fileRef = useRef<HTMLButtonElement>(null)
   return (
     <>
       <Toaster richColors />
       <Header connected={connected} length={files.length} />
       {connected && (
-        <div className="flex h-[90dvh] py-3.5 pl-11 gap-2.5 px-2 overflow-y-scroll justify-start items-center flex-col">
+        <div
+          onDragOver={(e) => (e.preventDefault(), fileRef.current?.click())}
+          className="flex h-[90dvh] py-3.5 pl-11 gap-2.5 px-2 overflow-y-scroll justify-start items-center flex-col"
+        >
           {files.map((file, i) => (
             <Files key={file.originalname + i} fileInfo={file} />
           ))}
@@ -138,10 +162,24 @@ function App(): React.JSX.Element {
             className="h-8 w-8 p-1 pt-1.5 hover:text-zinc-400 duration-300 transition-all cursor-pointer"
           />
         </div>
+        <div>
+          {secure ? (
+            <LuShieldCheck
+              onClick={() => window.electron.ipcRenderer.send('updateSecurity')}
+              className="h-8 w-8 p-1 pt-1.5 duration-300 transition-all cursor-pointer text-green-500"
+            />
+          ) : (
+            <LuShieldClose
+              onClick={() => window.electron.ipcRenderer.send('updateSecurity')}
+              className="h-8 w-8 p-1 pt-1.5 duration-300 transition-all cursor-pointer text-red-500"
+            />
+          )}
+        </div>
 
-        {connected && <Sendfile setSentFile={setSentFile} sentFile={sentFile} />}
+        {connected && <Sendfile ref={fileRef} setSentFile={setSentFile} sentFile={sentFile} />}
 
         {/* {version && <Changelog version={version} />} */}
+        {connected && <Clipboard />}
         {deviceInfo && connected && <QRpopup deviceInfo={deviceInfo} />}
         <Info />
       </div>
