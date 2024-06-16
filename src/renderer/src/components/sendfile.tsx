@@ -69,6 +69,7 @@ const Sendfile: React.ForwardRefRenderFunction<HTMLButtonElement, SendfileProps>
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault()
+    e.stopPropagation()
   }
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>): void => {
@@ -87,6 +88,7 @@ const Sendfile: React.ForwardRefRenderFunction<HTMLButtonElement, SendfileProps>
         <LiaFileUploadSolid className="h-8 w-8 p-1 pt-1.5 hover:text-zinc-400 duration-300 transition-all cursor-pointer" />
       </DialogTrigger>
       <DialogContent
+        draggable
         onDrop={handleOnDrop}
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}

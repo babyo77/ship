@@ -25,7 +25,7 @@ const securityFile = './security.json'
 let tray: Tray | null = null
 let Hidden: boolean = false
 let SecurityStatus: boolean = false
-
+let CurrentWindow: BrowserWindow | null = null
 function checkSecurity(): void {
   if (!fs.existsSync(securityFile)) {
     fs.writeFileSync(securityFile, JSON.stringify(false), 'utf-8')
@@ -80,11 +80,14 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
+      devTools: false,
+      nodeIntegration: true,
+      navigateOnDragDrop: true,
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
     }
   })
-
+  CurrentWindow = mainWindow
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
@@ -212,8 +215,9 @@ app.whenReady().then(() => {
       if (req.files && Array.isArray(files)) {
         if (Hidden) {
           const notification = new Notification({
-            icon: globalIcon,
+            icon: path.resolve(globalIcon),
             title: 'Recieved a new File',
+            silent: false,
             body: 'Tap to view',
             actions: [{ text: 'Show', type: 'button' }]
           })
@@ -284,7 +288,19 @@ app.whenReady().then(() => {
       io.to('transfer').emit('joined', io.sockets.adapter.rooms.get('transfer')?.size)
     })
     socket.on('text', (text) => {
-      console.log(text)
+      if (Hidden) {
+        const notification = new Notification({
+          icon: path.resolve(globalIcon),
+          title: 'Received clipboard text',
+          silent: false,
+          body: 'Tap to view'
+        })
+        notification.show()
+        notification.on('click', () => {
+          CurrentWindow?.show()
+          CurrentWindow?.focus()
+        })
+      }
       socket.broadcast.to('transfer').emit('text', text)
     })
     socket.on('phone', (file) => {

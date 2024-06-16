@@ -137,7 +137,8 @@ function App(): React.JSX.Element {
       <Header connected={connected} length={files.length} />
       {connected && (
         <div
-          onDragOver={(e) => (e.preventDefault(), fileRef.current?.click())}
+          draggable
+          onDragOver={(e) => (e.preventDefault(), e.stopPropagation(), fileRef.current?.click())}
           className="flex h-[90dvh] py-3.5 pl-11 gap-2.5 px-2 overflow-y-scroll justify-start items-center flex-col"
         >
           {files.map((file, i) => (
