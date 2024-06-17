@@ -1,0 +1,32 @@
+{
+  "name": "Ship",
+  "short_name": "Ship",
+  "description": "Web app",
+  "icons": [
+    {
+      "src": "/newfavicon.jpg",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/newfavicon.jpg",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/newfavicon.jpg",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/newfavicon.jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/?utm_source=pwa_install",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#070708",
+  "theme_color": "#070708"
+}
