@@ -39,7 +39,6 @@
         "nsis"
       ],
       "icon": "icons.ico",
-      "requestedExecutionLevel": "requireAdministrator",
       "signingHashAlgorithms": [
         "sha256"
       ],
@@ -64,6 +63,7 @@
       }
     ],
     "nsis": {
+      "include": "./msg.nsh",
       "installerIcon": "icons.ico",
       "uninstallerIcon": "icons.ico",
       "uninstallDisplayName": "uninstall ship",
