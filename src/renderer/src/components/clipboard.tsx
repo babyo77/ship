@@ -11,13 +11,18 @@ import {
 } from './ui/dialog'
 import { PiCopySimpleLight } from 'react-icons/pi'
 import { toast } from 'sonner'
-import { useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import socket from '@renderer/Socket/socket'
 
 export interface clipboard {
   text: string
 }
-function Clipboard(): React.JSX.Element {
+interface ClipboardProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+
+const Clipboard: React.ForwardRefRenderFunction<HTMLButtonElement, ClipboardProps> = (
+  props,
+  ref
+) => {
   const [data, setData] = useState<clipboard[]>([])
   const handelCopy = (text: string): void => {
     navigator.clipboard.writeText(text)
@@ -39,7 +44,7 @@ function Clipboard(): React.JSX.Element {
   }, [])
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger ref={ref} {...props}>
         <LiaClipboardSolid className="h-8 w-8 p-1 pt-1.5 hover:text-zinc-400 duration-300 transition-all cursor-pointer" />
       </DialogTrigger>
       <DialogContent className="bg-neutral-900 h-[90dvh] w-[80dvw]">
@@ -73,4 +78,4 @@ function Clipboard(): React.JSX.Element {
   )
 }
 
-export default Clipboard
+export default forwardRef(Clipboard)

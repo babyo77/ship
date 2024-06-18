@@ -299,6 +299,7 @@ app.whenReady().then(() => {
         notification.on('click', () => {
           CurrentWindow?.show()
           CurrentWindow?.focus()
+          io.to('transfer').emit('clipboard:notification')
         })
       }
       socket.broadcast.to('transfer').emit('text', text)

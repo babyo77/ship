@@ -33,6 +33,10 @@ function App(): React.JSX.Element {
   const [files, setFiles] = useState<Express.Multer.File[]>([])
   const [connected, setConnected] = useState(false)
   const [version, setVersion] = useState<string>()
+  const [sentFile, setSentFile] = useState<SendFile[]>([])
+  const [secure, setSecure] = useState<boolean>(false)
+  const clipboardRef = useRef<HTMLButtonElement>(null)
+  const fileRef = useRef<HTMLButtonElement>(null)
 
   const openDownloads = (): void =>
     window.electron.ipcRenderer.send('reveal-in-explorer', `./uploads`)
@@ -101,18 +105,23 @@ function App(): React.JSX.Element {
     const handleError = (error: string): void => {
       toast.error(error)
     }
+    const handleClickClipboard = (): void => {
+      if (clipboardRef.current) {
+        clipboardRef.current.click()
+      }
+    }
     socket.on('joined', isConnected)
     socket.on('error', handleError)
+    socket.on('clipboard:notification', handleClickClipboard)
     socket.on('file', recievedFile)
     return () => {
       socket.off('error', handleError)
       socket.off('joined', isConnected)
       socket.off('file', recievedFile)
+      socket.off('clipboard:notification', handleClickClipboard)
     }
   }, [])
 
-  const [sentFile, setSentFile] = useState<SendFile[]>([])
-  const [secure, setSecure] = useState<boolean>(false)
   useEffect(() => {
     const handleSecurity = (status: boolean): void => {
       setSecure(status)
@@ -130,7 +139,6 @@ function App(): React.JSX.Element {
       socket.off('security', handleSecurity)
     }
   }, [])
-  const fileRef = useRef<HTMLButtonElement>(null)
   return (
     <>
       <Toaster richColors />
@@ -180,7 +188,7 @@ function App(): React.JSX.Element {
         {connected && <Sendfile ref={fileRef} setSentFile={setSentFile} sentFile={sentFile} />}
 
         {/* {version && <Changelog version={version} />} */}
-        {connected && <Clipboard />}
+        <Clipboard ref={clipboardRef} />
         {deviceInfo && connected && <QRpopup deviceInfo={deviceInfo} />}
         <Info />
       </div>
