@@ -1,49 +1,160 @@
-# Ship
+# Ship 🚢
 
-Ship is an Electron-based application designed for Windows, enabling seamless file transfers from your phone to your PC over the same Wi-Fi network. This app provides a convenient and secure way to transfer files without relying on internet access or using cables. [Download](https://github.com/babyo77/ship/releases), [Demo](https://x.com/Tanmay11117/status/1797588308773818588)
+Ship your files without internet! 🚀
 
-## Features
+[![GitHub Repo stars](https://img.shields.io/github/stars/babyo77/ship?style=social)](https://github.com/babyo77/ship)
+[![GitHub Issues](https://img.shields.io/github/issues/babyo77/ship)](https://github.com/babyo77/ship/issues)
+[![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](https://opensource.org/licenses/ISC)
 
-- **Wi-Fi Transfer**: Transfer files between your phone and PC over the same Wi-Fi network.
-- **Secure and Private**: Your files are transferred directly between your devices, ensuring privacy.
-- **User-Friendly Interface**: Easy to use with a clean and intuitive interface.
+## Description 📄
 
-## Requirements
+Ship is a file-sharing application designed for local networks. It allows you to transfer files between devices without needing an internet connection. It uses technologies like Electron, React, and Socket.IO for a seamless and efficient experience.
 
-### For Phone
+## Key Features ✨
 
-- Any modern smartphone with a web browser.
+*   **Local File Sharing**: Transfer files quickly within a local network. 🌐
+*   **No Internet Required**: Operates independently of internet connectivity. 📶
+*   **Cross-Platform**: Built with Electron for compatibility across Windows, macOS, and Linux. 💻
+*   **Easy to Use**: Simple and intuitive user interface. 🖱️
+*   **QR Code Sharing**: Quickly connect devices by scanning a QR code. 📷
+*   **Clipboard Integration**: Copy and paste files. 📋
+*   **Context Menu**: Send files directly from the file explorer. 📂
+*   **Automatic Updates**: Stays up-to-date with the latest features and fixes. ⬆️
 
-### For PC
+## Tech Stack 🛠️
 
-- Windows 7 or higher.
+*   [Electron](https://www.electronjs.org/)
+*   [React](https://react.dev/)
+*   [TypeScript](https://www.typescriptlang.org/)
+*   [Tailwind CSS](https://tailwindcss.com/)
+*   [Electron Vite](https://github.com/electron-vite/electron-vite)
+*   [Socket.IO](https://socket.io/)
+*   [Axios](https://axios-http.com/)
+*   [Radix UI](https://www.radix-ui.com/)
+*   [Electron Builder](https://www.electron.build/)
 
-## Installation
+## Directory Structure 📂
+```
+└── babyo77-ship/
+    ├── check.bin
+    ├── dev-app-update.yml
+    ├── electron.vite.config.1718457916797.mjs
+    ├── electron.vite.config.ts
+    ├── msg.nsh
+    ├── package.json
+    ├── postcss.config.js
+    ├── security.json
+    ├── tailwind.config.js
+    ├── tsconfig.json
+    ├── tsconfig.node.json
+    ├── tsconfig.web.json
+    ├── .editorconfig
+    ├── .eslintignore
+    ├── .eslintrc.cjs
+    ├── .npmrc
+    ├── .prettierignore
+    ├── .prettierrc.yaml
+    ├── public/
+    │   ├── index.html
+    │   ├── manifest.json
+    │   └── assets/
+    ├── resources/
+    └── src/
+        ├── main/
+        │   └── index.ts
+        ├── preload/
+        │   ├── index.d.ts
+        │   └── index.ts
+        └── renderer/
+            ├── index.html
+            └── src/
+                ├── App.tsx
+                ├── env.d.ts
+                ├── index.css
+                ├── main.tsx
+                ├── Socket/
+                │   └── socket.ts
+                ├── api/
+                │   └── api.ts
+                ├── assets/
+                ├── components/
+                │   ├── Changelog.tsx
+                │   ├── analytics.tsx
+                │   ├── clipboard.tsx
+                │   ├── file.tsx
+                │   ├── header.tsx
+                │   ├── info.tsx
+                │   ├── qr.tsx
+                │   ├── qrPopup.tsx
+                │   ├── sendfile.tsx
+                │   └── ui/
+                │       └── dialog.tsx
+                └── lib/
+                    └── utils.ts
+```
 
-1. Download the `ship-setup.exe` installer from the [releases page](https://github.com/babyo77/ship/releases).
-2. Run the installer and follow the on-screen instructions to complete the installation.
+*   `check.bin`: Binary file used for updates.
+*   `dev-app-update.yml`: Configuration file for application updates.
+*   `electron.vite.config.ts`: Configuration file for Electron Vite.
+*   `msg.nsh`: NSIS script for custom installer messages.
+*   `package.json`: Node.js package manifest file.
+*   `postcss.config.js`: Configuration file for PostCSS.
+*   `security.json`: JSON file related to security configurations.
+*   `tailwind.config.js`: Configuration file for Tailwind CSS.
+*   `src/`: Contains the main application source code.
+    *   `main/`: Electron main process code.
+    *   `renderer/`: React-based renderer process code.
+    *   `preload/`: Preload scripts for secure context exposure.
+*   `public/`: Static assets such as `index.html` and `manifest.json`.
 
-## Usage
+## Installation ⬇️
 
-1. **Start the App**:
-   - Open `Ship` on your PC.
+1.  Clone the repository:
 
-2. **Scan the QR Code**:
-   - Use your phone's camera to scan the QR code displayed in the app on your PC.
+    bash
+    git clone https://github.com/babyo77/ship.git
+    cd ship
+    2.  Install dependencies:
 
-3. **Open the Web Interface**:
-   - On your phone, open the web browser and enter the URL provided after scanning the QR code.
+    bash
+    npm install
+    
+## Development 💻
 
-4. **Transfer Files**:
-   - Use the web interface to select files from your phone and initiate the transfer.
-   - The files will be transferred directly to your PC over the Wi-Fi network.
+1.  Start the development server:
 
-## Troubleshooting
+    bash
+    npm run dev
+    
+## Building 📦
 
-- **Wi-Fi Connection**: Ensure both your phone and PC are connected to the same Wi-Fi network.
-- **Firewall**: If you encounter connection issues, check your firewall settings to allow the app access.
-- **C Drive**: If app is installed in C drive try to run as administrator.
+1.  Build the application:
 
-### Contact
+    bash
+    npm run build
+    
+    or, build for a specific platform:
 
-For any inquiries or support, [contact](https://twitter.com/tanmay11117)
+    bash
+    npm run build:win
+    npm run build:mac
+    npm run build:linux
+    
+## Usage 🚀
+
+1.  Run the built application.
+2.  Share files by either sending a file or receiving a file.
+3.  Make sure both devices are on the same network.
+
+## Custom Installation (NSIS)
+  The `msg.nsh` file is an NSIS script that handles custom installation steps, including:
+  * Displaying a message box at the start of the installation.
+  * Adding a context menu item in the Windows Explorer for easy file sharing.
+
+## Contributing 🤝
+
+Contributions are welcome! Please feel free to submit a pull request or open an issue.
+
+## License 📜
+
+[ISC License](https://opensource.org/licenses/ISC)
