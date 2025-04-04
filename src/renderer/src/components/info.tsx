@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import React from 'react'
-import { IoMdInformationCircleOutline } from 'react-icons/io'
+import React from "react";
+import { IoMdInformationCircleOutline } from "react-icons/io";
 import {
   Dialog,
   DialogClose,
@@ -8,9 +8,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from './ui/dialog'
-import { VscBug } from 'react-icons/vsc'
+  DialogTrigger,
+} from "./ui/dialog";
+import { VscBug } from "react-icons/vsc";
 
 function Info(): React.JSX.Element {
   return (
@@ -23,27 +23,28 @@ function Info(): React.JSX.Element {
           <DialogTitle>Beta version</DialogTitle>
           <DialogDescription>
             <p className=" leading-tight">
-              This app is still under development. Stay tuned for more updates. Feel free to connect
-              with me.{' '}
+              This app is still under development. Stay tuned for more updates.
+              Feel free to connect with me.{" "}
             </p>
           </DialogDescription>
         </DialogHeader>
         <div className=" space-y-3 leading-tight font-normal text-zinc-400">
           <p>
-            Ship is an Electron-based application designed made by{' '}
+            Ship is an Electron-based application designed made by{" "}
             <a href="" className="text-sm text-zinc-100">
               @babyo7_
-            </a>{' '}
-            for Windows, enabling seamless file transfers from your phone to your PC over the same
-            Wi-Fi network. This app provides a convenient and secure way to transfer files without
-            relying on internet access or using cables.
+            </a>{" "}
+            for Windows, enabling seamless file transfers from your phone to
+            your PC over the same Wi-Fi network. This app provides a convenient
+            and secure way to transfer files without relying on internet access
+            or using cables.
           </p>
           <div className="flex items-center justify-between">
             <div className="flex gap-3">
               <DialogClose>
                 <a
                   target="blank"
-                  href="https://twitter.com/tanmay11117"
+                  href="https://twitter.com/tanmay7_"
                   className="font-medium hover:text-zinc-400 transition-all duration-300 tracking-tight leading-tight text-zinc-200"
                 >
                   Twitter
@@ -60,7 +61,7 @@ function Info(): React.JSX.Element {
               </DialogClose>
             </div>
             <div className=" cursor-pointer hover:text-zinc-100 duration-300 transition-all">
-              <a href="https://twitter.com/tanmay11117" target="blank">
+              <a href="https://twitter.com/tanmay7_" target="blank">
                 <VscBug />
               </a>
             </div>
@@ -68,7 +69,7 @@ function Info(): React.JSX.Element {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
-export default Info
+export default Info;

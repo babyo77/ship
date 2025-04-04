@@ -6,7 +6,7 @@
   "main": "./out/main/index.js",
   "author": "babyo7_",
   "homepage": "https://ship-file.vercel.app",
-  "publisher": "tanmay11117",
+  "publisher": "tanmay7_",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
@@ -34,6 +34,15 @@
       }
     ],
     "appId": "app.ship.babyo7",
+    "productName": "Ship",
+    "mac": {
+      "icon": "icons.icns",
+      "identity": null,
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.utilities"
+    },
     "win": {
       "target": [
         "nsis"
@@ -42,7 +51,7 @@
       "signingHashAlgorithms": [
         "sha256"
       ],
-      "publisherName": "tanmay11117",
+      "publisherName": "tanmay7_",
       "signAndEditExecutable": true,
       "verifyUpdateCodeSignature": true
     },
@@ -57,6 +66,13 @@
       {
         "from": "icons.ico",
         "to": "./icons.ico",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "icons.icns",
+        "to": "./icons.icns",
         "filter": [
           "**/*"
         ]
@@ -82,8 +98,8 @@
     "clipboard-event": "^1.6.0",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "multer": "^1.4.5-lts.1",
+    "express": "^5.1.0",
+    "multer": "1.4.5-lts.2",
     "qrcode.react": "^3.1.0",
     "react-icons": "^5.2.1",
     "socket.io": "^4.7.5",
